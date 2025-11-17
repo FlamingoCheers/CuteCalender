@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日程管理应用</title>
+    <link rel="stylesheet" href="fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="error-styles.css">
+</head>
+<body>
+    <!-- 错误提示容器 -->
+    <div id="errorContainer" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: #ff6b6b; color: white; padding: 10px; text-align: center; z-index: 9999;">
+        <span id="errorMessage"></span>
+        <button onclick="document.getElementById('errorContainer').style.display='none'" style="margin-left: 10px; background: white; color: #ff6b6b; border: none; padding: 5px 10px; border-radius: 3px;">关闭</button>
+    </div>
+    <!-- 全局导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-date">
+                <span id="currentDate"></span>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-view="workbench">工作台</button>
+                <button class="nav-btn" data-view="calendar">日历</button>
+                <button class="nav-btn" data-view="month">月历</button>
+            </div>
+            <div class="nav-actions">
+                <button class="action-btn" id="importBtn">导入</button>
+                <button class="action-btn" id="exportBtn">导出</button>
+                <button class="action-btn primary" id="addSingleBtn">+ 添加事项</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <!-- 工作台视图 -->
+        <div id="workbenchView" class="view active">
+            <div class="workbench-container">
+                <div class="week-calendar">
+                    <h2>本周日程</h2>
+                    <div id="weekSchedule" class="week-schedule"></div>
+                </div>
+                <div class="todo-list">
+                    <h2>待办事项</h2>
+                    <div id="todoList" class="todo-items"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 日历视图 -->
+        <div id="calendarView" class="view">
+            <div class="calendar-container">
+                <div class="day-info">
+                    <div class="day-number" id="dayNumber"></div>
+                    <div class="day-details">
+                        <div class="month-year" id="monthYear"></div>
+                        <div class="weekday" id="weekday"></div>
+                        <div class="todo-stats" id="todoStats"></div>
+                    </div>
+                </div>
+                <div class="day-events">
+                    <h3>今日事项</h3>
+                    <div id="dayEvents" class="events-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 月历视图 -->
+        <div id="monthView" class="view">
+            <div class="month-container">
+                <div class="month-header">
+                    <button id="prevMonth" class="month-nav">&lt;</button>
+                    <h2 id="monthTitle"></h2>
+                    <button id="nextMonth" class="month-nav">&gt;</button>
+                </div>
+                <div class="month-grid" id="monthGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 添加/编辑事项模态框 -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">添加事项</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventTitle">标题 *</label>
+                    <input type="text" id="eventTitle" name="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="noSchedule"> 暂不安排
+                    </label>
+                </div>
+                <div class="form-group" id="dateTimeGroup">
+                    <div class="form-group">
+                        <label for="eventDate">日期</label>
+                        <input type="date" id="eventDate" name="eventDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">时间</label>
+                        <input type="time" id="eventTime" name="eventTime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="eventCategory">类别 *</label>
+                    <select id="eventCategory" name="eventCategory" required>
+                        <option value="">请选择类别</option>
+                        <option value="personal">个人</option>
+                        <option value="work">主业工作</option>
+                        <option value="sideWork">副业工作</option>
+                        <option value="social">社交</option>
+                        <option value="love">恋爱</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDetails">详情</label>
+                    <textarea id="eventDetails" name="eventDetails" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="isRepeat">重复事项</label>
+                    <input type="checkbox" id="isRepeat">
+                </div>
+                <div id="repeatOptions" class="repeat-options" style="display: none;">
+                    <div class="form-group">
+                        <label for="repeatType">重复周期</label>
+                        <select id="repeatType">
+                            <option value="daily">每天</option>
+                            <option value="weekly">每周</option>
+                            <option value="monthly">每月</option>
+                            <option value="yearly">每年</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="neverEnd"> 永不结束
+                        </label>
+                    </div>
+                    <div class="form-group" id="endDateGroup">
+                        <label for="repeatEnd">结束日期</label>
+                        <input type="date" id="repeatEnd">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">取消</button>
+                    <button type="submit" class="btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 重复事项编辑选项模态框 -->
+    <div id="repeatEditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑重复事项</h3>
+            </div>
+            <div class="modal-body">
+                <p>您正在编辑一个重复事项，请选择编辑范围：</p>
+                <div class="repeat-edit-options">
+                    <label class="radio-option">
+                        <input type="radio" name="editScope" value="single" checked>
+                        <span>仅本次</span>
+                        <small>只修改当前这个事项</small>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="editScope" value="future">
+                        <span>更改此后所有</span>
+                        <small>修改当前及以后的所有重复事项</small>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelRepeatEdit">取消</button>
+                <button class="btn-primary" id="confirmRepeatEdit">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>确认删除</h3>
+            </div>
+            <div class="modal-body">
+                <p id="deleteConfirmText">确定要删除这个事项吗？</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelDelete">取消</button>
+                <button class="btn-danger" id="confirmDelete">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重复事项删除选项模态框 -->
+    <div id="repeatDeleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>删除重复事项</h3>
+            </div>
+            <div class="modal-body">
+                <p>您正在删除一个重复事项，请选择删除范围：</p>
+                <div class="repeat-delete-options">
+                    <label class="radio-option">
+                        <input type="radio" name="deleteScope" value="single" checked>
+                        <span>仅本次</span>
+                        <small>只删除当前这个事项</small>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="deleteScope" value="future">
+                        <span>删除此后所有</span>
+                        <small>删除当前及以后的所有重复事项</small>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="deleteScope" value="all">
+                        <span>删除全部</span>
+                        <small>删除整个重复事项系列</small>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelRepeatDelete">取消</button>
+                <button class="btn-danger" id="confirmRepeatDelete">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入模态框 -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>导入日程</h3>
+                <button class="close-btn" id="closeImportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="importFile">选择JSON文件</label>
+                    <input type="file" id="importFile" accept=".json">
+                </div>
+                <div id="importPreview" class="import-preview" style="display: none;">
+                    <h4>导入预览</h4>
+                    <div id="importStats"></div>
+                    <div id="importConflicts" class="import-conflicts"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelImport">取消</button>
+                <button class="btn-primary" id="confirmImport" disabled>导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="database.js"></script>
+    <script src="utils.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

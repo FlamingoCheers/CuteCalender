@@ -1,0 +1,78 @@
+/* 错误提示样式 */
+#errorContainer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff6b6b;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    display: none;
+    min-width: 300px;
+    text-align: center;
+    font-weight: 500;
+}
+
+#errorContainer .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#errorContainer .close-btn:hover {
+    opacity: 0.8;
+    transform: translateY(1px);
+    box-shadow: var(--inset-sm);
+}
+
+/* 表单验证样式 */
+.form-group input.error,
+.form-group select.error {
+    border-color: #ff6b6b !important;
+    background-color: #fff5f5 !important;
+}
+
+.form-group input.valid,
+.form-group select.valid {
+    border-color: #51cf66 !important;
+    background-color: #f8fff9 !important;
+}
+
+.form-group input:focus.error,
+.form-group select:focus.error {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2) !important;
+}
+
+.form-group input:focus.valid,
+.form-group select:focus.valid {
+    box-shadow: 0 0 0 3px rgba(81, 207, 102, 0.2) !important;
+}
+
+/* 实时验证提示 */
+.validation-hint {
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.validation-hint.error {
+    color: #ff6b6b;
+}
+
+.validation-hint.success {
+    color: #51cf66;
+}

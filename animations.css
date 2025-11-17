@@ -1,0 +1,193 @@
+/**
+ * 动画效果样式
+ */
+
+/* 页面加载动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 视图切换动画 */
+.view {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* 卡片进入动画 */
+.day-event, .todo-item, .event-item {
+    animation: none;
+}
+
+/* 模态框动画 */
+.modal.active .modal-content {
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* 按钮点击动画 */
+.btn:hover, .btn-icon:hover, .nav-btn:hover {
+    animation: none;
+}
+
+/* 类别标识动画 */
+.event-category, .todo-category {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 加载动画 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #4a90e2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 今日高亮脉冲效果 */
+.month-day.today {
+    animation: none;
+}
+
+/* 悬停效果增强 */
+.day-event:hover, .todo-item:hover, .event-item:hover {
+    animation: none;
+}
+
+/* 完成状态动画 */
+.completed {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 提示消息动画 */
+.toast.show {
+    animation: none;
+}
+
+.toast.hide {
+    animation: fadeIn 0.3s ease-out reverse;
+}
+
+/* 过渡效果 */
+* {
+    transition: all 0.3s ease;
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 响应式动画调整 */
+@media (max-width: 768px) {
+    .view {
+        animation: fadeInUp 0.2s ease-out;
+    }
+    
+    .modal.active .modal-content {
+        animation: scaleIn 0.2s ease-out;
+    }
+}
+
+/* 特殊效果 */
+.glow {
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+/* 状态指示器动画 */
+.status-toggle {
+    transition: all 0.3s ease;
+}
+
+.status-toggle.active {
+    animation: none;
+}
+
+/* 数字滚动动画 */
+@keyframes numberRoll {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.todo-stats {
+    animation: numberRoll 0.5s ease-out;
+}

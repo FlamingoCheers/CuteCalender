@@ -1,0 +1,16 @@
+/**
+ * 字体定义 - Oz焦糖下午茶
+ */
+
+@font-face {
+    font-family: 'Oz焦糖下午茶';
+    src: url('焦糖下午茶OzCaramel.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* 字体回退方案 */
+body {
+    font-family: 'Oz焦糖下午茶', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
